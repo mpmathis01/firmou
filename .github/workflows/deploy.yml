@@ -1,7 +1,7 @@
-name: Deploy Single File to Prod Branch
+name: Deploy to Dev or Prod
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
 permissions:
   contents: write
 jobs:
@@ -22,14 +22,20 @@ jobs:
       - name: Build project
         run: npm run build
         
-      - name: Deploy to Prod Branch
+      - name: Deploy to Target Branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
-          branch: prod # Envia apenas o conteúdo de 'dist' para a branch 'prod'
-          clean: true # Remove arquivos antigos da branch de destino
+          # Se o push for na 'main', envia para 'prod'. Se for na 'dev', envia para uma branch de arquivos de dev.
+          branch: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev-build' }}
+          clean: true
 
-      - name: Purge jsDelivr Cache
+      - name: Purge jsDelivr Cache (Prod)
+        if: github.ref == 'refs/heads/main'
         run: |
           curl -i https://purge.jsdelivr.net/gh/mpmathis01/firmou@prod/index.html
 
+      - name: Purge jsDelivr Cache (Dev)
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          curl -i https://purge.jsdelivr.net/gh/mpmathis01/firmou@dev-build/index.html
