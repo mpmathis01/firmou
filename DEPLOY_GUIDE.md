@@ -1,0 +1,46 @@
+# Guia de Envio de Build (Deploy) - Firmou
+
+Este guia explica como enviar as atualizações do seu computador diretamente para o GitHub para que apareçam no Blogger.
+
+## 🚀 Como fazer o Deploy
+
+A partir de agora, o build é feito localmente e apenas o arquivo final é enviado para o GitHub.
+
+### 1. Enviar para TESTE (Ambiente Dev)
+Use este comando quando quiser testar uma nova funcionalidade no Blogger de testes.
+
+```powershell
+# Gera o arquivo único em dist/index.html
+npm run build
+
+# Envia apenas o conteúdo da pasta dist para a branch dev-build
+git push origin dist:dev-build --force
+```
+**Link no Blogger:** `https://cdn.jsdelivr.net/gh/mpmathis01/firmou@dev-build/index.html`
+
+---
+
+### 2. Enviar para PRODUÇÃO (Ambiente Oficial)
+Use este comando apenas quando a versão de teste estiver perfeita.
+
+```powershell
+# Gera o arquivo único em dist/index.html
+npm run build
+
+# Envia apenas o conteúdo da pasta dist para a branch prod
+git push origin dist:prod --force
+```
+**Link no Blogger:** `https://cdn.jsdelivr.net/gh/mpmathis01/firmou@prod/index.html`
+
+## 🛠️ Detalhes Técnicos
+
+### Arquivos Gerados em `dist/`:
+- **index.html**: O App completo (JS e CSS embutidos).
+- **firmou-worker.js**: Inteligência offline (Service Worker).
+- **manifest.webmanifest**: Configurações de instalação.
+
+### 📝 Observações Importantes
+
+1. **Privacidade**: O seu código-fonte (`src/`, `vite.config.js`, etc) **não será enviado** para o GitHub. Apenas o arquivo compilado (`index.html`) ficará público nas branches de entrega.
+2. **Atualização Instantânea**: O sistema de link via jsDelivr pode demorar alguns segundos para atualizar. Se não mudar na hora, adicione `?v=1` ao final do link no Blogger para forçar.
+3. **Pastas**: Nunca apague a pasta `dist` manualmente, deixe o comando `npm run build` cuidar dela.
