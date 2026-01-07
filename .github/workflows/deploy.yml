@@ -28,3 +28,8 @@ jobs:
           folder: dist
           branch: prod # Envia apenas o conteúdo de 'dist' para a branch 'prod'
           clean: true # Remove arquivos antigos da branch de destino
+
+      - name: Purge jsDelivr Cache
+        run: |
+          curl -i https://purge.jsdelivr.net/gh/mpmathis01/firmou@prod/index.html
+
