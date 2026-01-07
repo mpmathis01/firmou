@@ -6,7 +6,6 @@ node_modules/
 # Produção / Builds
 dist/
 dist-ssr/
-build/
 .vite/
 *.local
 

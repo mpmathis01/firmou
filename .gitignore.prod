@@ -1,0 +1,16 @@
+# .gitignore para o branch PROD
+# Apenas build/prod/ e README.md devem estar neste branch
+
+# Ignorar tudo
+*
+
+# Exceto a pasta build/prod/
+!build/
+!build/prod/
+!build/prod/**
+
+# Exceto README
+!README.md
+
+# Exceto este gitignore
+!.gitignore

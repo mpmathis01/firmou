@@ -1,0 +1,16 @@
+# .gitignore para o branch DEV
+# Apenas build/dev/ e README.md devem estar neste branch
+
+# Ignorar tudo
+*
+
+# Exceto a pasta build/dev/
+!build/
+!build/dev/
+!build/dev/**
+
+# Exceto README
+!README.md
+
+# Exceto este gitignore
+!.gitignore

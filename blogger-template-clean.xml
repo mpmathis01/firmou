@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:layoutsversion='3' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+  <head>
+    <meta charset='utf-8'/>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes' name='viewport'/>
+    <title>Firmou - Orçamentos Profissionais</title>
+    <b:skin><![CDATA[ 
+      body { margin: 0; padding: 0; } 
+      .navbar, .blog-feeds, .feed-links, #header, #footer { display: none !important; }
+    ]]></b:skin>
+  </head>
+  <body>
+    <div id='root'></div>
+    <script>
+    //<![CDATA[
+    (function() {
+      var now = Date.now();
+      var fiveMinutes = 5 * 60 * 1000;
+      var cacheKey = Math.floor(now / fiveMinutes);
+      var BUILD_URL = 'https://cdn.jsdelivr.net/gh/mpmathis01/firmou@prod/build/prod/index.html?v=' + cacheKey;
+      
+      fetch(BUILD_URL)
+        .then(function(response) {
+          if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
+          return response.text();
+        })
+        .then(function(html) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          var styles = doc.querySelectorAll('style');
+          styles.forEach(function(style) {
+            document.head.appendChild(style.cloneNode(true));
+          });
+          var scripts = doc.querySelectorAll('script');
+          scripts.forEach(function(oldScript) {
+            var newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(function(attr) {
+              newScript.setAttribute(attr.name, attr.value);
+            });
+            newScript.textContent = oldScript.textContent;
+            document.body.appendChild(newScript);
+          });
+        })
+        .catch(function(error) {
+          document.getElementById('root').innerHTML = 
+            '<div style="padding:20px;text-align:center;font-family:sans-serif;">' +
+            '<h2>Erro ao carregar aplicação</h2>' +
+            '<p>Por favor, recarregue a página.</p>' +
+            '<button onclick="location.reload()" style="padding:10px 20px;font-size:16px;cursor:pointer;">Recarregar</button>' +
+            '</div>';
+        });
+    })();
+    //]]>
+    </script>
+    <b:section id='main' showaddelement='false'/>
+  </body>
+</html>
