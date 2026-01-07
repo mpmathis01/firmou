@@ -1,15 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'https://mpmathis01.github.io/firmou/',
   plugins: [
     react(),
+    viteSingleFile(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      injectRegister: 'inline',
       manifest: {
         name: 'Firmou',
         short_name: 'Firmou',
@@ -29,14 +30,5 @@ export default defineConfig({
         ]
       }
     })
-  ],
-  build: {
-    rollupOptions: {
-      output: {
-        entryFileNames: 'assets/index.js',
-        chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]'
-      }
-    }
-  }
+  ]
 })
