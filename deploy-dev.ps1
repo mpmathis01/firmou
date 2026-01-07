@@ -30,12 +30,26 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 4. Copiar .gitignore correto para o branch dev
-Write-Host "📋 Configurando .gitignore do branch dev..." -ForegroundColor Yellow
-Copy-Item -Path ".gitignore.dev" -Destination ".gitignore" -Force
+# 4. Criar .gitignore especifico para o branch dev (inline)
+Write-Host "Configurando .gitignore do branch dev..." -ForegroundColor Yellow
+@"
+# Ignorar tudo
+*
+
+# Exceto a pasta build/dev/
+!build/
+!build/dev/
+!build/dev/**
+
+# Exceto README
+!README.md
+
+# Exceto este gitignore
+!.gitignore
+"@ | Out-File -FilePath ".gitignore" -Encoding utf8 -Force
 
 # 5. Limpar arquivos antigos (manter apenas build/dev e README)
-Write-Host "🧹 Limpando arquivos desnecessários..." -ForegroundColor Yellow
+Write-Host "Limpando arquivos desnecessarios..." -ForegroundColor Yellow
 git rm -rf --cached . 2>$null | Out-Null
 git add .gitignore
 

@@ -41,9 +41,23 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 4. Copiar .gitignore correto para o branch prod
+# 4. Criar .gitignore especifico para o branch prod (inline)
 Write-Host "Configurando .gitignore do branch prod..." -ForegroundColor Yellow
-Copy-Item -Path ".gitignore.prod" -Destination ".gitignore" -Force
+@"
+# Ignorar tudo
+*
+
+# Exceto a pasta build/prod/
+!build/
+!build/prod/
+!build/prod/**
+
+# Exceto README
+!README.md
+
+# Exceto este gitignore
+!.gitignore
+"@ | Out-File -FilePath ".gitignore" -Encoding utf8 -Force
 
 # 5. Limpar arquivos antigos (manter apenas build/prod e README)
 Write-Host "Limpando arquivos desnecessarios..." -ForegroundColor Yellow
