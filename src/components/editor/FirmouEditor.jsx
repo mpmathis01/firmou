@@ -58,7 +58,7 @@ const FAQ_ITEMS = [
 
 import { HamburgerTrigger } from '../navigation/OffCanvasMenu';
 
-import { Eye, Edit3, Share2, Download } from 'lucide-react';
+import { Eye, Edit3, Share2 } from 'lucide-react';
 
 export const FirmouEditor = ({ onOpenPrivacy, onToggleMenu }) => {
     const [mobileTab, setMobileTab] = useState('edit'); // 'edit' or 'preview'
@@ -439,7 +439,7 @@ export const FirmouEditor = ({ onOpenPrivacy, onToggleMenu }) => {
                     onClick={handleGeneratePdf}
                     className="nav-item flex flex-col items-center p-2 rounded-xl text-slate-900 bg-amber-400 shadow-lg shadow-amber-400/20 hover:scale-105 transition-all active:scale-95"
                 >
-                    <Download size={24} />
+                    <Share2 size={24} />
                     <span className="text-[10px] font-black uppercase tracking-wider mt-1">Gerar PDF</span>
                 </button>
             </div>
