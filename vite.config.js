@@ -36,6 +36,9 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           inlineWorkboxRuntime: true,
+          additionalManifestEntries: [
+            { url: 'index.html', revision: `${Date.now()}` }
+          ]
         }
       })
     ],
