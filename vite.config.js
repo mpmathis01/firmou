@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const outDir = mode === 'production' ? 'build/prod' : 'build/dev'
 
   return {
+    base: mode === 'production' ? 'https://cdn.jsdelivr.net/gh/mpmathis01/firmou@prod/build/prod/' : '/',
     plugins: [
       react(),
       viteSingleFile(),
