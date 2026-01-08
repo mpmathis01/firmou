@@ -1,0 +1,13 @@
+{
+  "name": "firmou",
+  "version": "1.0.0",
+  "description": "Gerador de Documentos Firmou",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "live-server ."
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

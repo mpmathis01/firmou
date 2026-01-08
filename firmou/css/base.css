@@ -1,0 +1,30 @@
+:root {
+    --accent-color: #fbbf24;
+    --text-color: #0f172a;
+}
+
+.dark ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}

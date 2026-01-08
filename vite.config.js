@@ -48,6 +48,11 @@ export default defineConfig(({ mode }) => {
           assetFileNames: 'assets/firmou-[name].[ext]'
         }
       }
+    },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: []
     }
   }
 })

@@ -179,6 +179,10 @@ git remote -v
 4. Teste no ambiente de dev
 5. Quando estiver pronto: `npm run deploy:prod`
 
+## 🎯 Limpar cache do deploy
+
+https://purge.jsdelivr.net/gh/mpmathis01/firmou@prod/build/prod/index.html
+
 ---
 
 **Desenvolvido com ❤️ usando Vite + React + Tailwind CSS v4**
