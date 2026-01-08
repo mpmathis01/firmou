@@ -1,13 +1,13 @@
 ﻿# Ignorar tudo
 *
 
-# Exceto a pasta build/prod/
-!build/
-!build/prod/
-!build/prod/**
+# Exceto este gitignore
+!.gitignore
 
 # Exceto README
 !README.md
 
-# Exceto este gitignore
-!.gitignore
+# Permitir a pasta build/prod
+!build/
+!build/prod/
+!build/prod/**
