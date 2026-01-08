@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { FirmouEditor } from './components/editor/FirmouEditor';
 import CookieConsent from './components/common/CookieConsent';
 import PrivacyPolicyModal from './components/legal/PrivacyPolicyModal';
@@ -14,7 +14,7 @@ function App() {
     const toggleMenu = () => setShowMenu(!showMenu);
 
     return (
-        <BrowserRouter>
+        <HashRouter>
             <div className="antialiased">
                 <Routes>
                     <Route
@@ -45,7 +45,7 @@ function App() {
                     onClose={() => setShowPrivacyPolicy(false)}
                 />
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

@@ -6,6 +6,8 @@ import { BLOG_POSTS } from './blogData';
 // Helper to get image path
 // Helper to get image path using Vite's BASE_URL
 const getImagePath = (imageName) => {
+    if (!imageName) return '';
+    if (imageName.startsWith('http')) return imageName;
     const base = import.meta.env.BASE_URL;
     return `${base}assets/blog/${imageName}`;
 };
@@ -24,14 +26,107 @@ const BlogPost = () => {
 
     if (!post) return null;
 
-    // Simple markdown-like parser for content
+    // Advanced parser for content
     const renderContent = (content) => {
         return content.split('\n').map((line, index) => {
-            if (line.startsWith('## ')) return <h2 key={index} className="text-3xl font-black mt-12 mb-6 tracking-tight text-slate-900 dark:text-white">{line.replace('## ', '')}</h2>;
-            if (line.startsWith('### ')) return <h3 key={index} className="text-xl font-bold mt-8 mb-4 text-slate-800 dark:text-slate-200">{line.replace('### ', '')}</h3>;
-            if (line.startsWith('- ')) return <li key={index} className="ml-4 mb-2 list-disc text-slate-600 dark:text-slate-300 pl-2">{line.replace('- ', '')}</li>;
-            if (line.trim() === '') return <br key={index} />;
-            return <p key={index} className="mb-4 text-lg leading-relaxed text-slate-600 dark:text-slate-400">{line}</p>;
+            const trimmedLine = line.trim();
+            if (trimmedLine === '') return <br key={index} />;
+
+            // Headlines
+            if (trimmedLine.startsWith('## ')) return <h2 key={index} className="text-3xl font-black mt-12 mb-6 tracking-tight text-slate-900 dark:text-white">{trimmedLine.replace('## ', '')}</h2>;
+            if (trimmedLine.startsWith('### ')) return <h3 key={index} className="text-xl font-bold mt-8 mb-4 text-slate-800 dark:text-slate-200">{trimmedLine.replace('### ', '')}</h3>;
+
+            // List items
+            if (trimmedLine.startsWith('- ')) return <li key={index} className="ml-4 mb-2 list-disc text-slate-600 dark:text-slate-300 pl-2">{trimmedLine.replace('- ', '')}</li>;
+
+            // Video Tag: v[ID]
+            const videoMatch = trimmedLine.match(/^v\[(.*?)\]$/);
+            if (videoMatch) {
+                const videoId = videoMatch[1];
+                return (
+                    <div key={index} className="my-10 aspect-video rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+                        <iframe
+                            className="w-full h-full"
+                            src={`https://www.youtube.com/embed/${videoId}`}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                );
+            }
+
+            // Image Tag: ![alt](url)
+            const imgMatch = trimmedLine.match(/^!\[(.*?)\]\((.*?)\)$/);
+            if (imgMatch) {
+                const alt = imgMatch[1];
+                const src = imgMatch[2];
+                return (
+                    <figure key={index} className="my-10">
+                        <img src={getImagePath(src)} alt={alt} className="w-full rounded-3xl shadow-lg border border-slate-100 dark:border-slate-800" />
+                        {alt && <figcaption className="text-center text-sm text-slate-400 mt-4 italic">{alt}</figcaption>}
+                    </figure>
+                );
+            }
+
+            // Text with bold and internal links
+            // Simple replacement for **text** -> <strong>text</strong>
+            // Simple replacement for [label](slug) -> <Link to="/blog/slug">label</Link>
+            let parts = [trimmedLine];
+
+            // Handle [label](link)
+            const linkRegex = /\[(.*?)\]\((.*?)\)/g;
+            let lastIndex = 0;
+            let resultParts = [];
+            let match;
+
+            while ((match = linkRegex.exec(trimmedLine)) !== null) {
+                // Text before match
+                if (match.index > lastIndex) {
+                    resultParts.push(trimmedLine.substring(lastIndex, match.index));
+                }
+
+                const label = match[1];
+                const target = match[2];
+
+                if (target.startsWith('http') || target.includes('.')) {
+                    resultParts.push(<a key={`link-${match.index}`} href={target} target="_blank" rel="noopener noreferrer" className="text-amber-500 font-bold hover:underline">{label}</a>);
+                } else {
+                    // Internal blog link
+                    resultParts.push(<Link key={`link-${match.index}`} to={`/blog/${target}`} className="text-amber-500 font-bold hover:underline">{label}</Link>);
+                }
+                lastIndex = linkRegex.lastIndex;
+            }
+
+            if (lastIndex < trimmedLine.length) {
+                resultParts.push(trimmedLine.substring(lastIndex));
+            }
+
+            // Final rendering of parts, optionally handling **bold**
+            const finalElements = resultParts.map((part, i) => {
+                if (typeof part === 'string') {
+                    const boldRegex = /\*\*(.*?)\*\*/g;
+                    const boldParts = [];
+                    let boldLastIndex = 0;
+                    let boldMatch;
+
+                    while ((boldMatch = boldRegex.exec(part)) !== null) {
+                        if (boldMatch.index > boldLastIndex) {
+                            boldParts.push(part.substring(boldLastIndex, boldMatch.index));
+                        }
+                        boldParts.push(<strong key={boldMatch.index} className="font-bold text-slate-900 dark:text-white">{boldMatch[1]}</strong>);
+                        boldLastIndex = boldRegex.lastIndex;
+                    }
+                    if (boldLastIndex < part.length) {
+                        boldParts.push(part.substring(boldLastIndex));
+                    }
+                    return boldParts;
+                }
+                return part;
+            });
+
+            return <p key={index} className="mb-4 text-lg leading-relaxed text-slate-600 dark:text-slate-400">{finalElements}</p>;
         });
     };
 

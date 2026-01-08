@@ -13,11 +13,17 @@ export const BLOG_POSTS = [
 
 Você já enviou um orçamento e nunca mais ouviu falar do cliente? A culpa pode não ser do seu preço, mas da forma como você apresenta seu valor. Um orçamento não é apenas uma lista de preços; é uma ferramenta de vendas.
 
+**Dica de Ouro:** Sempre acompanhe seu cliente após o envio. Saiba mais em [Como fidelizar clientes](fidelizar-clientes).
+
 ### 1. Clareza é Rei
 Evite termos técnicos complicados. Se o seu cliente não entende o que está pagando, ele vai achar caro. Descreva os serviços de forma clara e objetiva. Em vez de "Passagem de cabos CAT6", use "Instalação de rede de internet de alta velocidade".
 
+![Exemplo de orçamento profissional](https://images.unsplash.com/photo-1554224155-169641357599?q=80&w=1000&auto=format&fit=crop)
+
 ### 2. A Apresentação Importa
 Um orçamento feito no papel de pão ou em uma planilha feia do Excel passa amadorismo. Usar ferramentas profissionais como o **Firmou** não só economiza seu tempo, mas mostra ao cliente que você é organizado e confiável.
+
+v[dQw4w9WgXcQ]
 
 ### 3. Detalhe os Benefícios, Não Só os Recursos
 Não venda apenas "instalação de ar condicionado". Venda "conforto térmico para sua família dormir bem no verão". Conectar o serviço à dor ou desejo do cliente aumenta drasticamente a taxa de aprovação.
