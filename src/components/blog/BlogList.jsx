@@ -5,8 +5,10 @@ import { BLOG_POSTS } from './blogData';
 
 // Helper to get image path (assuming they are in public/assets/blog or imported)
 // For simplicity in this environment, referencing public path directly or checking imported map
+// Helper to get image path using Vite's BASE_URL
 const getImagePath = (imageName) => {
-    return `/assets/blog/${imageName}`;
+    const base = import.meta.env.BASE_URL;
+    return `${base}assets/blog/${imageName}`;
 };
 
 const BlogList = () => {

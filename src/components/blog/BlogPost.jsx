@@ -4,8 +4,10 @@ import { ArrowLeft, Clock, Calendar, Share2 } from 'lucide-react';
 import { BLOG_POSTS } from './blogData';
 
 // Helper to get image path
+// Helper to get image path using Vite's BASE_URL
 const getImagePath = (imageName) => {
-    return `/assets/blog/${imageName}`;
+    const base = import.meta.env.BASE_URL;
+    return `${base}assets/blog/${imageName}`;
 };
 
 const BlogPost = () => {
