@@ -31,67 +31,69 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "Build concluido com sucesso!" -ForegroundColor Green
 Write-Host ""
 
-# 3. Mudar para o branch prod
+# 3. Salvar build em pasta temporaria (fora do controle do git)
+Write-Host "Preparando arquivos para transferencia..." -ForegroundColor Yellow
+$tempBuildDir = Join-Path $env:TEMP "firmou_build_$(Get-Date -Format 'yyyyMMddHHmmss')"
+New-Item -ItemType Directory -Path $tempBuildDir -Force | Out-Null
+Copy-Item -Path "build/prod/*" -Destination $tempBuildDir -Recurse -Force
+
+# 4. Mudar para o branch prod
 Write-Host "Mudando para o branch prod..." -ForegroundColor Yellow
 git checkout prod
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Erro ao mudar para o branch prod!" -ForegroundColor Red
-    git checkout $currentBranch
+    Remove-Item -Path $tempBuildDir -Recurse -Force
     exit 1
 }
 
-# 4. Criar .gitignore especifico para o branch prod (inline)
-Write-Host "Configurando .gitignore do branch prod..." -ForegroundColor Yellow
+# 5. Limpar branch prod completamente (exceto .git)
+Write-Host "Limpando o branch prod..." -ForegroundColor Yellow
+git rm -rf . 2>$null | Out-Null
+Get-ChildItem -Exclude ".git" | Remove-Item -Recurse -Force
+
+# 6. Restaurar .gitignore e README do branch prod (ou criar se sumiu)
 @"
 # Ignorar tudo
 *
 
-# Exceto a pasta build/prod/
-!build/
-!build/prod/
-!build/prod/**
+# Exceto este gitignore
+!.gitignore
 
 # Exceto README
 !README.md
 
-# Exceto este gitignore
-!.gitignore
+# Permitir a pasta build/prod
+!build/
+!build/prod/
+!build/prod/**
 "@ | Out-File -FilePath ".gitignore" -Encoding utf8 -Force
 
-# 5. Limpar arquivos antigos (manter apenas build/prod e README)
-Write-Host "Limpando arquivos desnecessarios..." -ForegroundColor Yellow
-git rm -rf --cached . 2>$null | Out-Null
+# 7. Trazer os arquivos do build de volta para build/prod
+Write-Host "Restaurando arquivos do build..." -ForegroundColor Yellow
+$prodBuildDir = "build/prod"
+New-Item -ItemType Directory -Path $prodBuildDir -Force | Out-Null
+Copy-Item -Path "$tempBuildDir/*" -Destination $prodBuildDir -Recurse -Force
+Remove-Item -Path $tempBuildDir -Recurse -Force
+
+# 8. Adicionar tudo e commitar
+Write-Host "Preparando commit..." -ForegroundColor Yellow
 git add .gitignore
-
-# 6. Adicionar apenas build/prod e README
-Write-Host "Adicionando arquivos do build..." -ForegroundColor Yellow
+if (Test-Path "README.md") { git add README.md }
 git add -f build/prod/
-git add -f README.md
 
-# 7. Verificar se ha mudancas
 $status = git status --porcelain
-
 if ([string]::IsNullOrWhiteSpace($status)) {
-    Write-Host "Nenhuma mudanca detectada. Nada para commitar." -ForegroundColor Yellow
+    Write-Host "Nenhuma mudanca detectada no build." -ForegroundColor Yellow
     git checkout $currentBranch
     exit 0
 }
 
-# 8. Criar commit
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $commitMessage = "build(prod): deploy automatico - $timestamp"
-
-Write-Host "Criando commit: $commitMessage" -ForegroundColor Yellow
 git commit -m $commitMessage
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Erro no commit." -ForegroundColor Yellow
-    git checkout $currentBranch
-    exit 0
-}
-
-# 9. Fazer push para o branch prod
+# 9. Fazer push
 Write-Host "Enviando para GitHub (branch prod)..." -ForegroundColor Yellow
 git push origin prod --force
 
@@ -107,6 +109,4 @@ git checkout $currentBranch
 
 Write-Host ""
 Write-Host "Deploy de PRODUCAO concluido com sucesso!" -ForegroundColor Green
-Write-Host "Branch: prod" -ForegroundColor Cyan
-Write-Host "Conteudo: build/prod/ + README.md" -ForegroundColor Cyan
-Write-Host "Branch atual: $currentBranch" -ForegroundColor Cyan
+Write-Host "Verifique em: https://cdn.jsdelivr.net/gh/mpmathis01/firmou@prod/build/prod/index.html" -ForegroundColor Cyan
