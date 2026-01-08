@@ -47,10 +47,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 5. Limpar branch prod completamente (exceto .git)
+# 5. Limpar branch prod completamente (exceto .git e node_modules)
 Write-Host "Limpando o branch prod..." -ForegroundColor Yellow
 git rm -rf . 2>$null | Out-Null
-Get-ChildItem -Exclude ".git" | Remove-Item -Recurse -Force
+Get-ChildItem -Exclude ".git", "node_modules" | Remove-Item -Recurse -Force
 
 # 6. Restaurar .gitignore e README do branch prod (ou criar se sumiu)
 @"
