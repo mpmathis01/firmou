@@ -12,7 +12,7 @@ const Dashboard = () => {
                 <span className="font-mono text-blue-600 ml-2">{db.name}</span>
             </p>
             <div className="mt-8 p-6 bg-white rounded-xl shadow-sm border border-slate-200 max-w-md mx-auto">
-                <h2 className="text-xl font-semibold text-slate-800">Pronto para começar</h2>
+                <h2 className="text-xl font-semibold text-slate-800">Pronto para começar 001</h2>
                 <p className="mt-2 text-slate-500">O projeto está reconstruído e organizado.</p>
             </div>
         </div>
